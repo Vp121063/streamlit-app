@@ -40,7 +40,10 @@ def main():
         new_password = st.text_input("Password", type="password")
         if st.button("Sign Up"):
             success, message = signup(new_user, new_password)
-            st.success(message) if success else st.error(message)
+            if success:
+                st.success(message)
+            else:
+                st.error(message)
     
     elif choice == "Login":
         st.subheader("Login to your account")
@@ -51,9 +54,14 @@ def main():
             if success:
                 st.success(message)
                 st.session_state["authenticated"] = True
+                
+                st.markdown(
+                    '<meta http-equiv="refresh" content="1;URL=https://www.vegapay.tech/">',
+                    unsafe_allow_html=True,
+                )
             else:
                 st.error(message)
 
+
 if __name__ == "__main__":
     main()
-	
