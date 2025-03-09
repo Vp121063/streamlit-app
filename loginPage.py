@@ -1,13 +1,15 @@
 import streamlit as st
 import psycopg2
-import os
-
+#from creds import DB_HOST, DB_NAME, DB_USER, DB_PASS, DB_PORT
 # PostgreSQL Connection
-DB_HOST = st.secrets["PGHOST"]
-DB_NAME = st.secrets["PGDATABASE"]
-DB_USER = st.secrets["PGUSER"]
-DB_PASS = st.secrets["PGPASSWORD"]
-DB_PORT = st.secrets["PGPORT"]
+try:
+    from creds import DB_HOST, DB_NAME, DB_USER, DB_PASS, DB_PORT
+except ImportError:
+    DB_HOST = st.secrets["PGHOST"]
+    DB_NAME = st.secrets["PGDATABASE"]
+    DB_USER = st.secrets["PGUSER"]
+    DB_PASS = st.secrets["PGPASSWORD"]
+    DB_PORT = st.secrets["PGPORT"]
 
 def get_db_connection():
     try:
@@ -23,22 +25,22 @@ def get_db_connection():
         return None
 
 # Create user table if not exists
-def create_table():
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-            id SERIAL PRIMARY KEY,
-            first_name VARCHAR(50) NOT NULL,
-            last_name VARCHAR(50) NOT NULL,
-            email VARCHAR(100) UNIQUE NOT NULL,
-            username VARCHAR(50) UNIQUE NOT NULL,
-            password VARCHAR(255) NOT NULL
-        )
-    """)
-    conn.commit()
-    cur.close()
-    conn.close()
+#def create_table():
+ #  conn = get_db_connection()
+   # cur = conn.cursor()
+  #  cur.execute("""
+   #     CREATE TABLE IF NOT EXISTS users (
+   #         id SERIAL PRIMARY KEY,
+   #         first_name VARCHAR(50) NOT NULL,
+  #          last_name VARCHAR(50) NOT NULL,
+   #         email VARCHAR(100) UNIQUE NOT NULL,
+  #          username VARCHAR(50) UNIQUE NOT NULL,
+  #          password VARCHAR(255) NOT NULL
+  #      )
+  #  """)
+  #  conn.commit()
+   # cur.close()
+  #  conn.close()
 
 def signup(first_name, last_name, email, username, password):
     conn = get_db_connection()
@@ -77,7 +79,7 @@ def login(email_or_username, password):
 
 def main():
     st.title("Login System with PostgreSQL")
-    create_table()  # Ensure table is created
+   # create_table()  # Ensure table is created
 
     menu = ["Login", "Sign Up"]
     choice = st.sidebar.selectbox("Menu", menu)
