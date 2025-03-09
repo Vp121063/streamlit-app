@@ -3,18 +3,24 @@ import psycopg2
 import os
 
 # PostgreSQL Connection
-DB_HOST = "localhost"
-DB_NAME = "aihackathon"
-DB_USER = "postgres"
-DB_PASS = "postgres"
+DB_HOST = st.secrets["PGHOST"]
+DB_NAME = st.secrets["PGDATABASE"]
+DB_USER = st.secrets["PGUSER"]
+DB_PASS = st.secrets["PGPASSWORD"]
+DB_PORT = st.secrets["PGPORT"]
 
 def get_db_connection():
-    return psycopg2.connect(
-        host=DB_HOST,
-        dbname=DB_NAME,
-        user=DB_USER,
-        password=DB_PASS
-    )
+    try:
+        return psycopg2.connect(
+            host=DB_HOST,
+            dbname=DB_NAME,
+            user=DB_USER,
+            password=DB_PASS,
+            port=DB_PORT
+        )
+    except Exception as e:
+        st.error(f"Database connection failed: {e}")
+        return None
 
 # Create user table if not exists
 def create_table():
@@ -27,8 +33,7 @@ def create_table():
             last_name VARCHAR(50) NOT NULL,
             email VARCHAR(100) UNIQUE NOT NULL,
             username VARCHAR(50) UNIQUE NOT NULL,
-            password VARCHAR(255) NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            password VARCHAR(255) NOT NULL
         )
     """)
     conn.commit()
@@ -112,4 +117,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
+
